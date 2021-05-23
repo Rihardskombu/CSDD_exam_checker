@@ -3,100 +3,114 @@ from selenium.webdriver.support.ui import Select
 from time import sleep
 import pyttsx3 as pyttsx
 
-fileUsername = open("E:\\desktop\\secret\\usr.txt", 'r')
-filePassword = open("E:\\desktop\\secret\\pwd.txt", 'r')
-
-username = fileUsername.read()
-password = filePassword.read()
 driver = webdriver.Chrome('chromedriver')
 
-class CsddBot2:
-    def login():#, username, password):
-        
-        driver.get("https://e.csdd.lv/login/?action=getLoginForm")
-        sleep(1)
-        
-  
-        login_field = driver.find_element_by_xpath("/html/body/main/section/div/div/form/div[1]/input")\
-                      .send_keys(username)
-        password_field = driver.find_element_by_xpath("/html/body/main/section/div/div/form/div[2]/div/input")\
-                         .send_keys(password)
-        login_button = driver.find_element_by_xpath("/html/body/main/section/div/div/form/input")\
-                        .click()
-        CsddBot2.process()
-       
-        
-                
-    def process():
-        driver.get("https://e.csdd.lv/examp/")
-        sleep(2)
-        
-        take_exam = driver.find_element_by_xpath("/html/body/main/div/div[1]/section[1]/form/fieldset/input[2]")\
-                    .click()
-        
-        sleep(2)
-        choose_department = driver.find_element_by_xpath("/html/body/main/div/div[1]/section[1]/form/div[1]/table/tbody/tr/td/select")\
-                            #.select_by_value('1')
-        sleep(2)
-        select_depart = Select(choose_department)
-        select_depart.select_by_value('1')
-        
-        sleep(2)
-        continue_button = driver.find_element_by_xpath("/html/body/main/div/div[1]/section[1]/form/fieldset/input")\
-                          .click()
-        sleep(2)
-        getlicense = driver.find_element_by_xpath("/html/body/main/div/div[1]/section[1]/form/div/table/tbody/tr/td/div/table/tbody/tr[1]/td/fieldset/label")\
-                     .click()
-        sleep(2)
-        continue_button2 = driver.find_element_by_xpath("/html/body/main/div/div[1]/section[1]/form/fieldset/input")\
-                           .click()
-        sleep(2)
-        exam_type = driver.find_element_by_xpath("/html/body/main/div/div[1]/section[1]/form/div/table/tbody/tr/td/div/table/tbody/tr[1]/td/fieldset/label/input")\
-                    .click()
-        
-        sleep(2)
-        continue_button3 = driver.find_element_by_xpath("/html/body/main/div/div[1]/section[1]/form/fieldset/input")\
-                           .click()
-        
-        sleep(2)
-        avail_dates = driver.find_element_by_xpath("/html/body/main/div/div[1]/section[1]/form/div/table/tbody/tr/td/select")\
-                      
-        avail_dates2 = driver.find_element_by_xpath("/html/body/main/div/div[1]/section[1]/form/div/table/tbody/tr/td/select")\
-                      .click()
+class CsddChecker:
+    def login():
 
-   
+        driver.get("https://e.csdd.lv/login/?action=getLoginForm") #open CSDD login link
+        sleep(1) #wait 1 second
+        
+        fileUsername = open("C:\\secret\\usr.txt", 'r') #open username text file
+        filePassword = open("C:\\secret\\pwd.txt", 'r') #open password text file 
+        
+        username = fileUsername.read() #read username from text file
+        password = filePassword.read() #read password from text file
+        
+        #fill username field
+        driver.find_element_by_xpath("/html/body/main/section/div/div/form/div[1]/input").send_keys(username)
+        
+        #fill password field
+        driver.find_element_by_xpath("/html/body/main/section/div/div/form/div[2]/div/input").send_keys(password)
+        
+        #click login button
+        driver.find_element_by_xpath("/html/body/main/section/div/div/form/input").click()
+
+
+    def examCheck():
+
+        driver.get("https://e.csdd.lv/examp/") #open CSDD 'apply for exam' form
+        sleep(2) #wait 2 seconds
+        
+        #take exam button
+        driver.find_element_by_xpath("/html/body/main/div/div[1]/section[1]/form/fieldset/input[2]").click()
+        sleep(2) #wait 2 seconds
+        
+        #pick branch
+        pick_branch = driver.find_element_by_xpath("/html/body/main/div/div[1]/section[1]/form/div[1]/table/tbody/tr/td/select")
+        sleep(2) #wait 2 seconds
+        
+        pick_branch = Select(pick_branch)
+        #pick_branch.select_by_value('1') #1 Rigas KAC
+        #pick_branch.select_by_value('2') #2 Daugavpils
+        pick_branch.select_by_value('4034') #4034 Rigas Bikiernieku
+        
+        #click continue button
+        driver.find_element_by_xpath("/html/body/main/div/div[1]/section[1]/form/fieldset/input").click()
+        sleep(14) #wait 4 seconds
+        
+        #pick reason (Iemesls)
+        driver.find_element_by_xpath("/html/body/main/div/div[1]/section[1]/form/div/table/tbody/tr/td/div/table/tbody/tr[1]/td/fieldset/label").click()
+        
+        #click continue button
+        driver.find_element_by_xpath("/html/body/main/div/div[1]/section[1]/form/fieldset/input").click()
+        sleep(4) #wait 4 seconds
+        
+        #pick exam type (Eksamena veids)
+        driver.find_element_by_xpath("/html/body/main/div/div[1]/section[1]/form/div/table/tbody/tr/td/div/table/tbody/tr[1]/td/fieldset/label/input").click()
+        
+        #click continue button
+        driver.find_element_by_xpath("/html/body/main/div/div[1]/section[1]/form/fieldset/input").click()
+        sleep(2)  #wait 2 seconds               
+        
+        #read dates from 'available dates' dropdown 
+        avail_dates = driver.find_element_by_xpath("/html/body/main/div/div[1]/section[1]/form/div/table/tbody/tr/td/select")
+        
+        #click 'available dates' dropdown (only for user convenience)
+        driver.find_element_by_xpath("/html/body/main/div/div[1]/section[1]/form/div/table/tbody/tr/td/select").click()
+
+        #read all values from dropdown
         select_dates = Select(avail_dates)
         options = select_dates.options
         
-        isEmpty = False
+        #define flag 'empty slot detected'
+        isEmptySlotDetected = False
         
-        for index in range(1, len(options)-1):
-            current_line = options[index].text
-            print(options[index].text)
-            if current_line[-1] != '0':
-                isEmpty = True
-        print(" ")
-        if isEmpty: 
-            what2Say = 'csdd'
+        #loop through dropdown values
+        for index in range(1, len(options)-3):
             
+            currentLine = options[index].text #current line :)
+            print(currentLine) #print current line in console
+            
+            #check last character of current line
+            #e.g. 19.05.2021 Brīvās vietas: 0
+            #                               ^
+            if currentLine[-1] != '0':
+                
+                #there is empty slot! because last character is not equal to 0
+                isEmptySlotDetected = True
+        
+        print(" ")  #print new(empty) line
+        
+        if isEmptySlotDetected == True:  #if there is empty slot, notify user
+            
+            #text to say
+            what2Say = 'csdd'
 
-            # Speaking engine
-            speakEngine = pyttsx.init()
-            speakEngine.say(what2Say)
-            speakEngine.runAndWait()
-
+            #endless loop
             while(True):
+                #speaking engine
+                speakEngine = pyttsx.init()
                 speakEngine.say(what2Say)
                 speakEngine.runAndWait()
-        else:
-            sleep(120)
-            CsddBot2.process()
+                sleep(2)  #wait 2 seconds
+              
+        else: #otherwise re-check again  
+            sleep(30) #wait 9 seconds
+            CsddChecker.examCheck() #execute exam check method again
         
-        
+#initialize
+CsddChecker.login()
 
-
-CsddBot2.login()
-
-
-
-
+#execute exam check method
+CsddChecker.examCheck()
