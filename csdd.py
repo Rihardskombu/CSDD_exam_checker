@@ -13,7 +13,11 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
+import json
+import telepot
+import requests
 
+rihards_id = '123' #telegram id of particular user
 
 
 driver = webdriver.Chrome("E:\desktop\chromedriver.exe")
@@ -41,11 +45,11 @@ class CsddBot:
         
         sleep(1)
         usernumber = "/html/body/div[1]/div/ui-views/ui-view/login-widget/ui-tabs/ui-views/ui-tab[1]/ui-form/form/ui-field[1]/div[2]/input"
-        driver.find_element_by_xpath(usernumber).send_keys("ff")
+        driver.find_element_by_xpath(usernumber).send_keys("567") #client number in swedbank
         
         sleep(1)
         personalnumber = "/html/body/div[1]/div/ui-views/ui-view/login-widget/ui-tabs/ui-views/ui-tab[1]/ui-form/form/ui-field[2]/div[2]/input"
-        driver.find_element_by_xpath(personalnumber).send_keys("gg")
+        driver.find_element_by_xpath(personalnumber).send_keys("345") #personal code of the person
         
         sleep(1)
         loginbuttonswed = "/html/body/div[1]/div/ui-views/ui-view/login-widget/ui-tabs/ui-views/ui-tab[1]/ui-form/form/ui-buttonbar/div[2]/button"
@@ -91,7 +95,13 @@ class CsddBot:
         capcha_xpath = "/html/body/main/div/div[1]/section[1]/form/div[2]/div/label/img"
         
         ele_captcha = wait.until(ec.visibility_of_element_located((By.XPATH, capcha_xpath)))
-
+        
+        
+        
+        #scroll till captcha
+        button_under_captcha = driver.find_element_by_xpath("/html/body/main/div/div[1]/section[1]/form/fieldset/input")
+        actions = ActionChains(driver)
+        actions.move_to_element(button_under_captcha).perform()
         
         img_captcha_base64 = driver.execute_async_script("""
             var ele = arguments[0], callback = arguments[1];
